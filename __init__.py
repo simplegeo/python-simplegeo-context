@@ -39,16 +39,13 @@ class Client(object):
             raise TypeError('Missing required argument "%s"' % (e.args[0],))
         return urljoin(urljoin(self.uri, self.api_version + '/'), endpoint)
 
-    def _request(self, endpoint, method, data=None):
+    def get_context(self, lat, lon):
+        endpoint = self.endpoint('context', lat=lat, lon=lon)
+        return self._request(endpoint, "GET")
+
+    def _request(self, endpoint, method):
         body = None
         params = {}
-        if method == "GET" and isinstance(data, dict):
-            endpoint = endpoint + '?' + urllib.urlencode(data)
-        else:
-            if isinstance(data, dict):
-                body = urllib.urlencode(data)
-            else:
-                body = data
         request = oauth.Request.from_consumer_and_token(self.consumer,
             http_method=method, http_url=endpoint, parameters=params)
 
@@ -58,69 +55,16 @@ class Client(object):
 
         resp, content = self.http.request(endpoint, method, body=body, headers=headers)
 
+        if resp['status'][0] not in ('2', '3'):
+            raise APIError(int(resp['status']), content, resp)
+
         if content: # Empty body is allowed.
             try:
                 content = json.loads(content)
             except (ValueError, TypeError), le:
                 raise DecodeError(resp, content, le)
 
-        if resp['status'][0] not in ('2', '3'):
-            code = resp['status']
-            message = content
-            if isinstance(content, dict):
-                code = content['code']
-                message = content['message']
-            raise APIError(code, message, resp)
-
-        # If this is a record object, return the Python object instead of the dict.
-        try:
-            content = Record.from_dict(content)
-        except (TypeError, KeyError):
-            # Okay nevermind I guess it wasn't a Record.
-            pass
-
         return content
-
-class Record:
-#XXX refactor me into a shared library between python-simplegeo-places and python-simplegeo-context
-    def __init__(self, id, lat, lon, type='object', created=None, **kwargs):
-        self.id = id
-        self.lon = lon
-        self.lat = lat
-        self.type = type
-        if created is None:
-            self.created = int(time.time())
-        else:
-            self.created = created
-        self.__dict__.update(kwargs)
-
-    @classmethod
-    def from_dict(cls, data):
-        assert data
-        coord = data['geometry']['coordinates']
-        record = cls(data['id'], lat=coord[1], lon=coord[0])
-        record.type = data['properties']['type']
-        record.created = data.get('created', record.created)
-        record.__dict__.update(dict((k, v) for k, v in data['properties'].iteritems()
-                                    if k not in ('type', 'created')))
-        return record
-
-    def to_dict(self):
-        return {
-            'type': 'Feature',
-            'id': self.id,
-            'created': self.created,
-            'geometry': {
-                'type': 'Point',
-                'coordinates': [self.lon, self.lat],
-            },
-            'properties': dict((k, v) for k, v in self.__dict__.iteritems() 
-                                        if k not in ('lon', 'lat', 'id', 'created')),
-        }
-
-    def to_json(self):
-        return json.dumps(self.to_dict())
-
 
 class APIError(Exception):
     """Base exception for all API errors."""
@@ -130,15 +74,6 @@ class APIError(Exception):
         self.msg = msg
         self.headers = headers
         self.description = description
-
-    def __getitem__(self, key):
-        if key == 'code':
-            return self.code
-
-        try:
-            return self.headers[key]
-        except KeyError:
-            raise AttributeError(key)
 
     def __str__(self):
         return self.__repr__()
@@ -154,5 +89,5 @@ class DecodeError(APIError):
         self.body = body
 
     def __repr__(self):
-        return "headers: %s, content: <%s> %s" % (self.headers, self.body, self.description)
+        return "<%s headers: %s, content: %s , description: %s>" % (self.__class__.__name__, self.headers, self.body, self.description)
 
