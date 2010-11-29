@@ -3,7 +3,7 @@ import random
 import unittest
 from jsonutil import jsonutil as json
 import random
-from simplegeo.places import Client, Record, APIError
+from simplegeo.context import Client, APIError, DecodeError
 
 from decimal import Decimal as D
 
@@ -46,15 +46,178 @@ class ClientTest(unittest.TestCase):
         self.assertRaises(Exception, self.client.endpoint, 'context')
 
     def test_get_context(self):
-        xyz make a bunch of things
-
         mockhttp = mock.Mock()
-        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, resultrecord.to_json())
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
         self.client.http = mockhttp
 
         res = self.client.get_context(self.query_lat, self.query_lon)
         self.assertEqual(mockhttp.method_calls[0][0], 'request')
-        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/places/%s.json' % (API_VERSION, simplegeoid))
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
-        self.failUnless(isinstance(res, Record), res)
-        self.assertEqual(res.to_json(), resultrecord.to_json())
+        # the code under test is required to have json-decoded this before handing it back
+        self.failUnless(isinstance(res, dict), res)
+
+    def test_get_context_nobody(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, None)
+        self.client.http = mockhttp
+
+        res = self.client.get_context(self.query_lat, self.query_lon)
+        self.assertEqual(mockhttp.method_calls[0][0], 'request')
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
+        self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
+
+
+    def test_get_context_bad_json(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY + 'some crap')
+        self.client.http = mockhttp
+
+        try:
+            res = self.client.get_context(self.query_lat, self.query_lon)
+        except DecodeError, e:
+            self.failUnlessEqual(e.code,None,repr(e.code))
+            self.failUnlessEqual(e.msg,"Could not decode JSON",repr(e.msg))
+            decode_e = repr(e)
+
+        self.assertEqual(mockhttp.method_calls[0][0], 'request')
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
+        self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
+
+
+    def test_get_context_error(self):
+        mockhttp = mock.Mock()
+        # mockhttp.request.return_value = ({'status': '500', 'content-type': 'application/json', }, None)
+        mockhttp.request.return_value = ({'status': '500', 'content-type': 'application/json', }, '{"message": "help my web server is confuzzled"}')
+        self.client.http = mockhttp
+
+        try:
+            res = self.client.get_context(self.query_lat, self.query_lon)
+        except APIError, e:
+            self.failUnlessEqual(e.code, 500, repr(e.code))
+            self.failUnlessEqual(e.msg, '{"message": "help my web server is confuzzled"}', (type(e.msg), repr(e.msg)))
+
+        self.assertEqual(mockhttp.method_calls[0][0], 'request')
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
+        self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
+
+    def test_APIError(self):
+        e = APIError(500, 'whee', {'status': "500"})
+        self.failUnlessEqual(e.code, 500)
+        self.failUnlessEqual(e.msg, 'whee')
+        representation = repr(e)
+        string = str(e) 
+
+
+EXAMPLE_BODY="""
+{
+   "weather": {
+    "message" : "'NoneType' object has no attribute 'properties'",
+    "code" : 400
+    },
+   "features": [
+    {
+     "name" : "06075013000",
+     "type" : "Census Tract",
+     "bounds": [
+      -122.437326,
+      37.795016,
+      -122.42360099999999,
+      37.799485
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Census_Tract%3A06075013000%3A9q8zn0.json"
+     },
+     {
+     "name" : "94123",
+     "type" : "Postal",
+     "bounds": [
+      -122.452966,
+      37.792787,
+      -122.42360099999999,
+      37.810798999999996
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Postal%3A94123%3A9q8zjc.json"
+     },
+     {
+     "name" : "San Francisco",
+     "type" : "County",
+     "bounds": [
+      -123.173825,
+      37.639829999999996,
+      -122.28178,
+      37.929823999999996
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/County%3ASan_Francisco%3A9q8yvv.json"
+     },
+     {
+     "name" : "San Francisco",
+     "type" : "City",
+     "bounds": [
+      -123.173825,
+      37.639829999999996,
+      -122.28178,
+      37.929823999999996
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/City%3ASan_Francisco%3A9q8yvv.json"
+     },
+     {
+     "name" : "Congressional District 8",
+     "type" : "Congressional District",
+     "bounds": [
+      -122.612285,
+      37.708131,
+      -122.28178,
+      37.929823999999996
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Congressional_District%3ACongressional_Di%3A9q8yyn.json"
+     },
+     {
+     "name" : "United States of America",
+     "type" : "Country",
+     "bounds": [
+      -179.14247147726383,
+      18.930137634111077,
+      179.78114994357418,
+      71.41217966730892
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Country%3AUnited_States_of%3A9z12zg.json"
+     },
+     {
+     "name" : "Pacific Heights",
+     "type" : "Neighborhood",
+     "bounds": [
+      -122.446782,
+      37.787529,
+      -122.422182,
+      37.797728
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Neighborhood%3APacific_Heights%3A9q8yvz.json"
+     },
+     {
+     "name" : "San Francisco1",
+     "type" : "Urban Area",
+     "bounds": [
+      -122.51666666668193,
+      37.19166666662851,
+      -121.73333333334497,
+      38.04166666664091
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Urban_Area%3ASan_Francisco1%3A9q9jsg.json"
+     },
+     {
+     "name" : "California",
+     "type" : "Province",
+     "bounds": [
+      -124.48200299999999,
+      32.528832,
+      -114.131211,
+      42.009516999999995
+     ],
+     "href" : "http://api.simplegeo.com/0.1/boundary/Province%3ACA%3A9qdguu.json"
+     }
+   ],
+   "demographics": {
+    "metro_score" : "10"
+    }
+   }
+"""
