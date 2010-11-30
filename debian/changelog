@@ -1,3 +1,12 @@
+python-simplegeo-context (1.2.10) lucid; urgency=low
+
+  [ ansate ]
+  * added some more tests, fixed the old ones. removed a bunch of code
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 30 Nov 2010 21:37:42 +0000
+
 python-simplegeo-context (0.9.1) unstable; urgency=low
 
   * first working version
