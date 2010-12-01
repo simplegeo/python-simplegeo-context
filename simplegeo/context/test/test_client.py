@@ -3,7 +3,10 @@ import random
 import unittest
 from jsonutil import jsonutil as json
 import random
-from simplegeo.context import Client, APIError, DecodeError
+
+# import simplegeo
+# print simplegeo
+from simplegeo.context import ContextClient, APIError, DecodeError
 
 from decimal import Decimal as D
 
@@ -23,7 +26,7 @@ API_PORT = 80
 
 class ClientTest(unittest.TestCase):
     def setUp(self):
-        self.client = Client(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
+        self.client = ContextClient(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
         self.query_lat = D('37.8016')
         self.query_lon = D('-122.4783')
 
@@ -55,14 +58,14 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
         # the code under test is required to have json-decoded this before handing it back
-        self.failUnless(isinstance(res, dict), res)
+        self.failUnless(isinstance(res, dict), (type(res), repr(res)))
 
-    def test_get_context_nobody(self):
+    def test_get_context_no_body(self):
         mockhttp = mock.Mock()
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, None)
         self.client.http = mockhttp
 
-        res = self.client.get_context(self.query_lat, self.query_lon)
+        self.failUnlessRaises(DecodeError, self.client.get_context, self.query_lat, self.query_lon)
         self.assertEqual(mockhttp.method_calls[0][0], 'request')
         self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
@@ -87,7 +90,6 @@ class ClientTest(unittest.TestCase):
 
     def test_get_context_error(self):
         mockhttp = mock.Mock()
-        # mockhttp.request.return_value = ({'status': '500', 'content-type': 'application/json', }, None)
         mockhttp.request.return_value = ({'status': '500', 'content-type': 'application/json', }, '{"message": "help my web server is confuzzled"}')
         self.client.http = mockhttp
 
@@ -106,7 +108,7 @@ class ClientTest(unittest.TestCase):
         self.failUnlessEqual(e.code, 500)
         self.failUnlessEqual(e.msg, 'whee')
         representation = repr(e)
-        string = str(e) 
+        string = str(e)
 
 
 EXAMPLE_BODY="""
