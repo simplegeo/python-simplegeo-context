@@ -44,7 +44,7 @@ setup(name=PKG,
       url="http://github.com/simplegeo/python-simplegeo-context",
       packages = find_packages(),
       license = "MIT License",
-      install_requires=['simplegeo-common >= 1.9', 'httplib2'],
+      install_requires=['simplegeo-common >= 1.9'],
       keywords="simplegeo",
       zip_safe=False, # actually it is zip safe, but zipping packages doesn't help with anything and can cause some problems (http://bugs.python.org/setuptools/issue33 )
       namespace_packages = ['simplegeo'],
