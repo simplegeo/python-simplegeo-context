@@ -2,7 +2,6 @@
 
 verstr = "1.2.12"
 try:
-    from pyutil.version_class import Version as pyutil_Version
     __version__ = pyutil_Version(verstr)
 except (ImportError, ValueError):
     # Maybe there is no pyutil installed.
