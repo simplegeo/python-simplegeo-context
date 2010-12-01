@@ -70,7 +70,6 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
 
-
     def test_get_context_bad_json(self):
         mockhttp = mock.Mock()
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY + 'some crap')
@@ -80,7 +79,7 @@ class ClientTest(unittest.TestCase):
             res = self.client.get_context(self.query_lat, self.query_lon)
         except DecodeError, e:
             self.failUnlessEqual(e.code,None,repr(e.code))
-            self.failUnlessEqual(e.msg,"Could not decode JSON",repr(e.msg))
+            self.failUnless("Could not decode" in e.msg, repr(e.msg))
             decode_e = repr(e)
 
         self.assertEqual(mockhttp.method_calls[0][0], 'request')
