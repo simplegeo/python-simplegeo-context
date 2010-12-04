@@ -1,3 +1,67 @@
+python-simplegeo-context (1.4.28) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * make simplegeo-context depend on the simplegeo-common package and
+    re-use its contents (which makes this package very small)
+  * loosen test with regard to exactly what the error message is
+  * version number bump to get past hudson saying "Branch not suitable
+    for integration as it does not merge cleanly"
+  * add python-simplegeo-common as a Build-Dep (for tests)
+
+  [ Ben Standefer ]
+  * Consumption and performance tests.
+
+  [ dsmith ]
+  * Added some default values for the global variables.
+
+  [ Simple Geebus ]
+
+  [ Zooko Ofsimplegeo ]
+  * make simplegeo-context depend on the simplegeo-common package and
+    re-use its contents (which makes this package very small)
+  * version number bump to get past hudson saying "Branch not suitable
+    for integration as it does not merge cleanly"
+
+  [ Ben Standefer ]
+  * Consumption and performance tests.
+
+  [ Zooko Ofsimplegeo ]
+  * switch from depending on python-simplegeo-common to python-
+    simplegeo-shared
+  * make simplegeo-context depend on the simplegeo-common package and
+    re-use its contents (which makes this package very small)
+  * loosen test with regard to exactly what the error message is
+  * add python-simplegeo-common as a Build-Dep (for tests)
+
+  [ Ben Standefer ]
+  * Consumption and performance tests.
+
+  [ dsmith ]
+  * Added some default values for the global variables.
+
+  [ Simple Geebus ]
+
+  [ Zooko Ofsimplegeo ]
+  * make simplegeo-context depend on the simplegeo-common package and
+    re-use its contents (which makes this package very small)
+  * version number bump to get past hudson saying "Branch not suitable
+    for integration as it does not merge cleanly"
+
+  [ Ben Standefer ]
+  * Consumption and performance tests.
+
+  [ Zooko Ofsimplegeo ]
+  * switch from depending on python-simplegeo-common to python-
+    simplegeo-shared
+  * workaround LAUNCHED
+
+  [ Zooko ]
+  * use pysupport and pyutil
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Sat, 04 Dec 2010 00:20:43 +0000
+
 python-simplegeo-context (1.2.12) lucid; urgency=low
 
   * UNRELEASED
