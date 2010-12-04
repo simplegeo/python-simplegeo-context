@@ -1,3 +1,13 @@
+python-simplegeo-context (1.4.29) lucid; urgency=low
+
+  [ Ben Standefer ]
+  * Update consumption tests now that we changed 'id' to 'handle' in
+    appropriate places.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Sat, 04 Dec 2010 00:50:27 +0000
+
 python-simplegeo-context (1.4.28) lucid; urgency=low
 
   [ Zooko Ofsimplegeo ]
