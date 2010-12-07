@@ -1,16 +1,9 @@
-import time
-import random
 import unittest
-from jsonutil import jsonutil as json
-import random
 
-# import simplegeo
-# print simplegeo
-from simplegeo.context import ContextClient, APIError, DecodeError
+from simplegeo.context import Client
+from simplegeo.shared import APIError, DecodeError, Record
 
 from decimal import Decimal as D
-
-import os
 
 import mock
 
@@ -26,7 +19,7 @@ API_PORT = 80
 
 class ClientTest(unittest.TestCase):
     def setUp(self):
-        self.client = ContextClient(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
+        self.client = Client(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
         self.query_lat = D('37.8016')
         self.query_lon = D('-122.4783')
 
@@ -76,11 +69,11 @@ class ClientTest(unittest.TestCase):
         self.client.http = mockhttp
 
         try:
-            res = self.client.get_context(self.query_lat, self.query_lon)
+            self.client.get_context(self.query_lat, self.query_lon)
         except DecodeError, e:
             self.failUnlessEqual(e.code,None,repr(e.code))
             self.failUnless("Could not decode" in e.msg, repr(e.msg))
-            decode_e = repr(e)
+            repr(e)
 
         self.assertEqual(mockhttp.method_calls[0][0], 'request')
         self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
@@ -93,7 +86,7 @@ class ClientTest(unittest.TestCase):
         self.client.http = mockhttp
 
         try:
-            res = self.client.get_context(self.query_lat, self.query_lon)
+            self.client.get_context(self.query_lat, self.query_lon)
         except APIError, e:
             self.failUnlessEqual(e.code, 500, repr(e.code))
             self.failUnlessEqual(e.msg, '{"message": "help my web server is confuzzled"}', (type(e.msg), repr(e.msg)))
@@ -106,8 +99,8 @@ class ClientTest(unittest.TestCase):
         e = APIError(500, 'whee', {'status': "500"})
         self.failUnlessEqual(e.code, 500)
         self.failUnlessEqual(e.msg, 'whee')
-        representation = repr(e)
-        string = str(e)
+        repr(e)
+        str(e)
 
 
 EXAMPLE_BODY="""

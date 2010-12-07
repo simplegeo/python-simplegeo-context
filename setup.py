@@ -44,10 +44,10 @@ setup(name=PKG,
       url="http://github.com/simplegeo/python-simplegeo-context",
       packages = find_packages(),
       license = "MIT License",
-      # install_requires=['simplegeo-shared >= 1.9'], # We have a problem with namespace packages in Debian, and commenting-out this let's the debian install of python-simplegeo-context use the debian install of python-simplegeo-shared even though pkg_resources can't tell that the debian install of python-simplegeo-shared has provided the "simplegeo-shared" Python package.
-      install_requires=[],
+      install_requires=['simplegeo-shared >= 1.12'],
       keywords="simplegeo",
       zip_safe=False, # actually it is zip safe, but zipping packages doesn't help with anything and can cause some problems (http://bugs.python.org/setuptools/issue33 )
       namespace_packages = ['simplegeo'],
       setup_requires=setup_requires,
+      test_suite='simplegeo.context.test',
       tests_require=tests_require)
