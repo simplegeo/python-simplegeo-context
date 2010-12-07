@@ -4,7 +4,8 @@ import random
 import time
 import numpy
 
-from simplegeo.context import ContextClient, APIError
+from simplegeo.context import Client
+from simplegeo.shared import APIError
 
 MY_OAUTH_KEY = ''
 MY_OAUTH_SECRET = ''
@@ -16,7 +17,7 @@ API_PORT = 80
 class PerformanceTest(object):
     def __init__(self, number_of_requests=10000):
         self.number_of_requests = number_of_requests
-        self.client = ContextClient(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
+        self.client = Client(MY_OAUTH_KEY, MY_OAUTH_SECRET, API_VERSION, API_HOST, API_PORT)
         print self.client
         self.responses = []
 
