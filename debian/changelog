@@ -1,3 +1,12 @@
+python-simplegeo-context (2.0.39) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * increase requirement on -shared to >= 2.0
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 08 Dec 2010 07:34:32 +0000
+
 python-simplegeo-context (2.0.38) lucid; urgency=low
 
   [ Zooko Ofsimplegeo ]
