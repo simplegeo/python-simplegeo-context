@@ -52,6 +52,14 @@ class ClientTest(unittest.TestCase):
         # the code under test is required to have json-decoded this before handing it back
         self.failUnless(isinstance(res, dict), (type(res), repr(res)))
 
+    def test_get_context_invalid(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
+        self.client.http = mockhttp
+
+        self.failUnlessRaises(AssertionError, self.client.get_context, -91, 100)
+        self.failUnlessRaises(AssertionError, self.client.get_context, -11, 181)
+
     def test_get_context_no_body(self):
         mockhttp = mock.Mock()
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, None)
