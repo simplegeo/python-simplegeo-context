@@ -1,3 +1,16 @@
+python-simplegeo-context (2.0.38) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * README.txt -- link to sister libraries
+  * pyflakes, don't generate unused xml coverage results
+  * input validation on lats and lons being within bounds
+  * bump version number to 2.0
+  * build dep pyflakes
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 08 Dec 2010 07:28:44 +0000
+
 python-simplegeo-context (1.5.34) lucid; urgency=low
 
   [ ansate ]
