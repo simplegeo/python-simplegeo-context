@@ -1,7 +1,7 @@
 import unittest
 
 from simplegeo.context import Client
-from simplegeo.shared import APIError, DecodeError, Record
+from simplegeo.shared import APIError, DecodeError, Feature
 
 from decimal import Decimal as D
 
@@ -28,18 +28,17 @@ class ClientTest(unittest.TestCase):
         self.record_lat = (self.record_lat + 10) % 90
         self.record_lon = (self.record_lon + 10) % 180
 
-        return Record(
+        return Feature(
             layer=TESTING_LAYER,
             id=str(self.record_id),
-            lat=self.record_lat,
-            lon=self.record_lon
+            coordinates=(self.record_lat, self.record_lon)
         )
 
     def test_wrong_endpoint(self):
-        self.assertRaises(Exception, self.client.endpoint, 'wrongwrong')
+        self.assertRaises(Exception, self.client._endpoint, 'wrongwrong')
 
     def test_missing_argument(self):
-        self.assertRaises(Exception, self.client.endpoint, 'context')
+        self.assertRaises(Exception, self.client._endpoint, 'context')
 
     def test_get_context(self):
         mockhttp = mock.Mock()
