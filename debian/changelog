@@ -1,3 +1,31 @@
+python-simplegeo-context (1.5.34) lucid; urgency=low
+
+  [ ansate ]
+  * update it to handle new changes to shared
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 08 Dec 2010 03:29:24 +0000
+
+python-simplegeo-context (1.5.32) lucid; urgency=low
+
+  [ Ben Standefer ]
+  * Fix imports and responses for consumption tests.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 07 Dec 2010 23:26:55 +0000
+
+python-simplegeo-context (1.5.31) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * depend on simplegeo-shared>=1.12, clean up some flakes, rename
+    context.ContextClient to context.Client ; version => 1.5
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 07 Dec 2010 22:28:16 +0000
+
 python-simplegeo-context (1.4.29) lucid; urgency=low
 
   [ Ben Standefer ]
