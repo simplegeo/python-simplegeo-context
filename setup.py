@@ -19,7 +19,6 @@ else:
         raise RuntimeError("if %s.py exists, it must be well-formed" % (VERSIONFILE,))
 
 setup_requires = []
-tests_require = ['mock']
 
 # nosetests is an optional way to get code-coverage results. Uncomment
 # the following and run "python setup.py nosetests --with-coverage.
@@ -44,10 +43,10 @@ setup(name=PKG,
       url="http://github.com/simplegeo/python-simplegeo-context",
       packages = find_packages(),
       license = "MIT License",
-      install_requires=['simplegeo-shared >= 1.12'],
+      install_requires=['simplegeo-shared >= 1.13'],
       keywords="simplegeo",
       zip_safe=False, # actually it is zip safe, but zipping packages doesn't help with anything and can cause some problems (http://bugs.python.org/setuptools/issue33 )
       namespace_packages = ['simplegeo'],
       setup_requires=setup_requires,
       test_suite='simplegeo.context.test',
-      tests_require=tests_require)
+      tests_require=['mock'])
