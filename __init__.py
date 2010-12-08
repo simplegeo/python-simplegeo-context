@@ -12,5 +12,5 @@ class Client(SGClient):
         self.endpoints['context'] = 'context/%(lat)s,%(lon)s.json'
 
     def get_context(self, lat, lon):
-        endpoint = self.endpoint('context', lat=lat, lon=lon)
+        endpoint = self._endpoint('context', lat=lat, lon=lon)
         return json_decode(self._request(endpoint, "GET")[1])
