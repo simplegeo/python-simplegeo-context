@@ -1,3 +1,13 @@
+python-simplegeo-context (2.0.40) lucid; urgency=low
+
+  [ Ben Standefer ]
+  * Make consumption tests check for dupes, more accurate, way better,
+    etc.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 09 Dec 2010 00:39:32 +0000
+
 python-simplegeo-context (2.0.39) lucid; urgency=low
 
   [ Zooko Ofsimplegeo ]
