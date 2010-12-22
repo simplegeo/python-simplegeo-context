@@ -1,3 +1,25 @@
+python-simplegeo-context (2.2.51) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * this doesn't depend on simplejson directly -- this depends on
+    python-simplegeo-shared which depends on pyutil[jsonutil] which
+    (currently) depends on simplejson
+  * split version into separately-editable manual version number and
+    automatic build number
+  * raise dependency on python-simplegeo-shared to >= 2.1 (needed for
+    is_valid_ip())
+  * raise dependency on python-simplegeo-shared to >= 2.2.45, to make
+    sure we have the fix for the test of the obscure corner case in
+    ipaddr
+
+  [ Zooko ]
+  * fix test to use something that is *really* not an IP address when
+    testing that the client rejects non-IP-addresses
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 22 Dec 2010 06:58:05 +0000
+
 python-simplegeo-context (2.0.44) lucid; urgency=low
 
   * UNRELEASED
