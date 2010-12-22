@@ -21,11 +21,19 @@ class Client(SGClient):
         return json_decode(self._request(endpoint, "GET")[1])
 
     def get_context_by_ip(self, ipaddr):
+        """ The server uses guesses the latitude and longitude from
+        the ipaddr and then does the same thing as get_context() using
+        that guessed latitude and longitude. """
         precondition(is_valid_ip(ipaddr), ipaddr)
         endpoint = self._endpoint('context_by_ip', ip=ipaddr)
         return json_decode(self._request(endpoint, "GET")[1])
 
     def get_context_by_my_ip(self):
+        """ The server gets the IP address from the HTTP connection
+        (this may be the IP address of your device or of a firewall,
+        NAT, or HTTP proxy device between you and the server), and
+        then does the same thing as get_context_by_ip() using that IP
+        address. """
         endpoint = self._endpoint('context_by_my_ip')
         return json_decode(self._request(endpoint, "GET")[1])
 
