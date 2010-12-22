@@ -70,7 +70,7 @@ class ClientTest(unittest.TestCase):
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
         self.client.http = mockhttp
 
-        self.failUnlessRaises(AssertionError, self.client.get_context_by_ip, '11111111')
+        self.failUnlessRaises(AssertionError, self.client.get_context_by_ip, '40.1,127.999')
 
     def test_get_context_invalid(self):
         mockhttp = mock.Mock()
