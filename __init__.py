@@ -46,6 +46,7 @@ class Client(SGClient):
         street address and then does the same thing as get_context(),
         using that deduced latitude and longitude.
         """
+        precondition(isinstance(address, basestring), address)
         endpoint = self._endpoint('context_by_address', address=urllib.quote_plus(address))
         return json_decode(self._request(endpoint, "GET")[1])
 
