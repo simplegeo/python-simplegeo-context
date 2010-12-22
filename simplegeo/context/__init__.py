@@ -12,6 +12,7 @@ class Client(SGClient):
 
         self.endpoints['context'] = 'context/%(lat)s,%(lon)s.json'
         self.endpoints['context_by_ip'] = 'context/%(ip)s.json'
+        self.endpoints['context_by_my_ip'] = 'context/ip.json'
 
     def get_context(self, lat, lon):
         precondition(is_valid_lat(lat), lat)
@@ -23,3 +24,8 @@ class Client(SGClient):
         precondition(is_valid_ip(ipaddr), ipaddr)
         endpoint = self._endpoint('context_by_ip', ip=ipaddr)
         return json_decode(self._request(endpoint, "GET")[1])
+
+    def get_context_by_my_ip(self):
+        endpoint = self._endpoint('context_by_my_ip')
+        return json_decode(self._request(endpoint, "GET")[1])
+
