@@ -1,4 +1,4 @@
-import unittest
+import unittest, urllib
 
 from simplegeo.context import Client
 from simplegeo.shared import APIError, DecodeError, Feature
@@ -51,6 +51,17 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
         # the code under test is required to have json-decoded this before handing it back
         self.failUnless(isinstance(res, dict), (type(res), repr(res)))
+
+    def test_get_context_by_address(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
+        self.client.http = mockhttp
+
+        addr = '41 Decatur St, San Francisco, CA'
+        self.client.get_context_by_address(addr)
+        self.assertEqual(mockhttp.method_calls[0][0], 'request')
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/address.json?address=%s' % (API_VERSION, urllib.quote_plus(addr)))
+        self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
 
     def test_get_context_by_my_ip(self):
         mockhttp = mock.Mock()
@@ -113,7 +124,6 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(mockhttp.method_calls[0][0], 'request')
         self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s,%s.json' % (API_VERSION, self.query_lat, self.query_lon))
         self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
-
 
     def test_get_context_error(self):
         mockhttp = mock.Mock()
