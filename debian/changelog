@@ -1,3 +1,12 @@
+python-simplegeo-context (2.2.56) lucid; urgency=low
+
+  [ Zooko Ofsimplegeo ]
+  * add docs for new get_context_by_* methods
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 22 Dec 2010 14:53:45 +0000
+
 python-simplegeo-context (2.2.55) lucid; urgency=low
 
   [ Zooko Ofsimplegeo ]
