@@ -52,6 +52,26 @@ class ClientTest(unittest.TestCase):
         # the code under test is required to have json-decoded this before handing it back
         self.failUnless(isinstance(res, dict), (type(res), repr(res)))
 
+    def test_get_context_by_ip(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
+        self.client.http = mockhttp
+
+        ipaddr = '192.0.32.10'
+        res = self.client.get_context_by_ip(ipaddr=ipaddr)
+        self.assertEqual(mockhttp.method_calls[0][0], 'request')
+        self.assertEqual(mockhttp.method_calls[0][1][0], 'http://api.simplegeo.com:80/%s/context/%s.json' % (API_VERSION, ipaddr))
+        self.assertEqual(mockhttp.method_calls[0][1][1], 'GET')
+        # the code under test is required to have json-decoded this before handing it back
+        self.failUnless(isinstance(res, dict), (type(res), repr(res)))
+
+    def test_get_context_by_ip_invalid(self):
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
+        self.client.http = mockhttp
+
+        self.failUnlessRaises(AssertionError, self.client.get_context_by_ip, '11111111')
+
     def test_get_context_invalid(self):
         mockhttp = mock.Mock()
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
