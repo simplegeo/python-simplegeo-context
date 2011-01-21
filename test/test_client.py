@@ -52,6 +52,21 @@ class ClientTest(unittest.TestCase):
         # the code under test is required to have json-decoded this before handing it back
         self.failUnless(isinstance(res, dict), (type(res), repr(res)))
 
+    @mock.patch('oauth2.Request.make_timestamp')
+    @mock.patch('oauth2.Request.make_nonce')
+    def test_oauth(self, mock_make_nonce, mock_make_timestamp):
+        mock_make_nonce.return_value = 5
+        mock_make_timestamp.return_value = 6
+
+        mockhttp = mock.Mock()
+        mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
+        self.client.http = mockhttp
+
+        self.client.get_context(self.query_lat, self.query_lon)
+
+        self.assertEqual(mockhttp.method_calls[0][2]['body'], None)
+        self.assertEqual(mockhttp.method_calls[0][2]['headers']['Authorization'], 'OAuth realm="http://api.simplegeo.com", oauth_nonce="5", oauth_timestamp="6", oauth_consumer_key="MY_OAUTH_KEY", oauth_signature_method="HMAC-SHA1", oauth_version="1.0", oauth_signature="AObXFB%2BqjwC20j5guAprkiREfIg%3D"')
+
     def test_get_context_by_address(self):
         mockhttp = mock.Mock()
         mockhttp.request.return_value = ({'status': '200', 'content-type': 'application/json', }, EXAMPLE_BODY)
