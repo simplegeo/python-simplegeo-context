@@ -97,7 +97,7 @@ class ClientTest(unittest.TestCase):
         self.client.http = mockhttp
 
         self.failUnlessRaises(AssertionError, self.client.get_context, -91, 100)
-        self.failUnlessRaises(AssertionError, self.client.get_context, -11, 181)
+        self.failUnlessRaises(AssertionError, self.client.get_context, -11, 361)
 
     def test_get_context_no_body(self):
         mockhttp = mock.Mock()
